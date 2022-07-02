@@ -1,36 +1,31 @@
 pipeline {
     agent any
-	environment {
+	    environment {
         PATH = "/opt/maven/bin:$PATH"
     }
-     stages {
+    stages {
         stage('CodeCheckout') {
             steps {
-		git credentialsId: 'git_credentials', url: 'https://github.com/shashikanth-t/mwebrepo.git'
-		echo "CodeCheckout is executed."
-		  }
-				}
-	
+               git credentialsId: 'git_credentials', url: 'https://github.com/shashikanth-t/mwebrepo.git'
+               echo 'CodeCheckout executed.'
+            }
+			}
         stage('CodeBuild') {
             steps {
-		sh 'mvn clean install'
-		echo "CodeBuild is executed."
-		  }
-				}
-	
+                sh 'mvn clean install'
+                echo 'CodeBuild executed.'
+            }
+			}
         stage('CodeDeploy') {
             steps {
-		sshagent(['deploy_user']) {
-	sh "scp -o StrictHostKeyChecking=no webapp/target/webapp.war  ec2-user@3.94.150.143:/opt/apache-tomcat-9.0.63/webapps"
-    echo "CodeDeploy is executed."
-}
-		  }
-				}
+               
+        sshagent(['deploy_user']) {
+			sh "scp -o StrictHostKeyChecking=no webapp/target/webapp.war  ubuntu@3.21.206.193:/opt/apache-tomcat-9.0.64/webapps"
+			echo ""
+								}			
+            }
+			}
+        }
+    }
 	
-        stage('Stage-4') {
-            steps {
-		echo "Stage-4 is executed."
-		  }
-				}
-	}
-}
+	
